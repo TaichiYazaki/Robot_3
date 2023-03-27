@@ -1,5 +1,4 @@
 import csv
-import operator
 import os
 import termcolor
 
@@ -20,25 +19,47 @@ class Roboter(object):
         self.user_name = user_name
 
     def greeting(self):
-        path = 'ranking.csv'
+        path = 'ranking1.csv'
         is_file = os.path.isfile(path)
         if is_file:
             with open('ranking.csv', 'r') as f:
-                reader = csv.reader(f)
-                ranking_lists = sorted(reader,
-                                       key=operator.itemgetter(1),
-                                       reverse=True)
-                for list in ranking_lists:
-                    recommend_restaurant = list[0]
+                ranking_lists = f.read().splitlines()
+                count = {}
+                for ranking_list in ranking_lists:
+                    count.setdefault(ranking_list, 0)
+                    count[ranking_list] += 1
+                lists = sorted(count.items(), key=lambda x: x[1], reverse=True)
+                for key, value in lists:
                     with open('roboter/templates/greeting.txt', 'r') as f:
                         template = f.read()
                     is_yes = input(termcolor.colored(
                         template.replace(
-                            '$restaurant', recommend_restaurant), 'red'))
+                            '$restaurant', key), 'red'))
                     if is_yes.lower() == 'y' or is_yes.lower() == 'yes':
                         break
+                
         else:
             pass
+    # def greeting(self):
+    #     path = 'ranking.csv'
+    #     is_file = os.path.isfile(path)
+    #     if is_file:
+    #         with open('ranking1.csv', 'r') as f:
+    #             reader = csv.reader(f)
+    #             ranking_lists = sorted(reader,
+    #                                    key=operator.itemgetter(1),
+    #                                    reverse=True)
+    #             for list in ranking_lists:
+    #                 recommend_restaurant = list[0]
+    #                 with open('roboter/templates/greeting.txt', 'r') as f:
+    #                     template = f.read()
+    #                 is_yes = input(termcolor.colored(
+    #                     template.replace(
+    #                         '$restaurant', recommend_restaurant), 'red'))
+    #                 if is_yes.lower() == 'y' or is_yes.lower() == 'yes':
+    #                     break
+    #     else:
+    #         pass
 
     def which_restaurant(self):
         with open('roboter/templates/which_restaurant.txt', 'r') as f:
