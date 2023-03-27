@@ -47,16 +47,13 @@ class Roboter(object):
         with open('roboter/templates/which_restaurant.txt', 'r') as f:
             template = f.read()
         favorite_restaurant = input(termcolor.colored(
-            template.replace('$user_name', self.user_name), 'red'))
-        count = 1
-        with open('ranking.csv', 'w', newline='') as f:
-            header = ['NAME', 'COUNT']
-            writer = csv.DictWriter(f, fieldnames=header)
-            writer.writeheader()
-            writer.writerow({'NAME': favorite_restaurant, 'COUNT': count})
+            template.replace('$user_name', self.user_name), 'green'))
+        with open('ranking.csv', 'a+', newline='') as ranking_csv:
+            writer = csv.writer(ranking_csv)
+            writer.writerow([favorite_restaurant])
 
     def good_bye(self):
         with open('roboter/templates/good_bye.txt', 'r') as f:
             template = f.read()
         print(termcolor.colored(
-            template.replace('$user_name', self.user_name), 'green'))
+            template.replace('$user_name', self.user_name), 'red'))
